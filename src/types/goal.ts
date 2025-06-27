@@ -1,20 +1,14 @@
 export interface Goal {
-  id: string;
+  id?: number;
   title: string;
   description: string;
-  targetDate?: Date;
-  createdAt: Date;
   isCompleted: boolean;
+  targetDate?: Date;
+  createdAt?: Date;
 }
 
 export interface GoalFilters {
-  status: 'all' | 'completed' | 'incomplete';
-  sortBy: 'targetDate' | 'createdAt';
-  sortOrder: 'asc' | 'desc';
+  status: "all" | "completed" | "incomplete";
+  sortBy: "targetDate" | "createdAt";
+  sortOrder: "asc" | "desc";
 }
-
-export interface CreateGoalInput {
-  title: string;
-  description: string;
-  targetDate?: Date;
-} 

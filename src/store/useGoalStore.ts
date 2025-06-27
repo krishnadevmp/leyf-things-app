@@ -1,34 +1,35 @@
-import { create } from 'zustand';
-import { v4 as uuidv4 } from 'uuid';
-import type { Goal, CreateGoalInput, GoalFilters } from '../types/goal';
-
+import { create } from "zustand";
+import type { Goal, GoalFilters } from "../types/goal";
 interface GoalState {
   goals: Goal[];
   filters: GoalFilters;
-  addGoal: (goal: CreateGoalInput) => void;
+  addGoal: (goal: Goal) => void;
   updateGoal: (goal: Goal) => void;
-  deleteGoal: (id: string) => void;
-  toggleGoal: (id: string) => void;
+  deleteGoal: (id: number) => void;
+  toggleGoal: (id: number) => void;
   setFilters: (filters: Partial<GoalFilters>) => void;
 }
 
 const initialFilters: GoalFilters = {
-  status: 'all',
-  sortBy: 'targetDate',
-  sortOrder: 'asc',
+  status: "all",
+  sortBy: "targetDate",
+  sortOrder: "asc",
 };
 
-export const useGoalStore = create<GoalState>()((set, get) => ({
+export const useGoalStore = create<GoalState>()((set) => ({
   goals: [],
   filters: initialFilters,
 
-  addGoal: (goalInput: CreateGoalInput) =>
+  addGoal: (goalInput: Goal) =>
     set((state) => ({
       goals: [
         ...state.goals,
         {
-          id: uuidv4(),
           ...goalInput,
+          id:
+            state.goals.length > 0
+              ? Math.max(...state.goals.map<number>((goal) => goal.id!)) + 1
+              : 0,
           createdAt: new Date(),
           isCompleted: false,
         },
@@ -42,12 +43,12 @@ export const useGoalStore = create<GoalState>()((set, get) => ({
       ),
     })),
 
-  deleteGoal: (id: string) =>
+  deleteGoal: (id: number) =>
     set((state) => ({
       goals: state.goals.filter((goal: Goal) => goal.id !== id),
     })),
 
-  toggleGoal: (id: string) =>
+  toggleGoal: (id: number) =>
     set((state) => ({
       goals: state.goals.map((goal: Goal) =>
         goal.id === id ? { ...goal, isCompleted: !goal.isCompleted } : goal
