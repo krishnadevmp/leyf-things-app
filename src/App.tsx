@@ -1,29 +1,29 @@
-import { ThemeProvider, createTheme, CssBaseline } from '@mui/material';
-import { GoalList } from './components/GoalList';
-import './App.css';
+import { ThemeProvider, createTheme, CssBaseline } from "@mui/material";
+import { GoalList } from "./components/GoalList";
+import "./App.css";
 
 const theme = createTheme({
   palette: {
-    mode: 'light',
+    mode: "light",
     primary: {
-      main: '#646cff',
+      main: "#646cff",
     },
     secondary: {
-      main: '#61dafb',
+      main: "#61dafb",
     },
     background: {
-      default: '#f8f9fa',
-      paper: '#ffffff',
+      default: "#f8f9fa",
+      paper: "#ffffff",
     },
   },
   typography: {
-    fontFamily: 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif',
+    fontFamily: "Inter, system-ui, Avenir, Helvetica, Arial, sans-serif",
   },
   components: {
     MuiButton: {
       styleOverrides: {
         root: {
-          textTransform: 'none',
+          textTransform: "none",
         },
       },
     },
