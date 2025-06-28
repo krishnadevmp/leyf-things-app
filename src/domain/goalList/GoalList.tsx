@@ -105,12 +105,6 @@ export const GoalList = () => {
                   {filters.sortBy === "targetDate" &&
                     (filters.sortOrder === "asc" ? "↑" : "↓")}
                 </ToggleButton>
-                {/* <ToggleButton value="createdAt">
-                  <SortIcon />
-                  Created Date{" "}
-                  {filters.sortBy === "createdAt" &&
-                    (filters.sortOrder === "asc" ? "↑" : "↓")}
-                </ToggleButton> */}
               </ToggleButtonGroup>
             </Grid>
           </Grid>

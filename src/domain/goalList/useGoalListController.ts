@@ -2,6 +2,7 @@ import { useState, type MouseEvent } from "react";
 import type { GoalFilters } from "../../types/goal";
 import { useGoalStore } from "../../store/useGoalStore";
 import {
+  useDeleteGoal,
   useGetGoals,
   useUpdateGoalStatus,
   type GoalDTO,
@@ -12,7 +13,8 @@ const useGoalListController = () => {
   const filters = useGoalStore((state) => state.filters);
   const setFilters = useGoalStore((state) => state.setFilters);
   const toggleGoal = useUpdateGoalStatus();
-  const deleteGoal = useGoalStore((state) => state.deleteGoal);
+  //   const deleteGoal = useGoalStore((state) => state.deleteGoal);
+  const deleteGoal = useDeleteGoal();
 
   const [editingGoal, setEditingGoal] = useState<GoalDTO | null>(null);
   const [showForm, setShowForm] = useState(false);
@@ -23,7 +25,7 @@ const useGoalListController = () => {
 
   const handleDelete = (goalId: string) => {
     if (window.confirm("Are you sure you want to delete this goal?")) {
-      deleteGoal(goalId);
+      deleteGoal.mutateAsync(goalId);
     }
   };
 

@@ -1,6 +1,7 @@
 import { ThemeProvider, createTheme, CssBaseline } from "@mui/material";
 import { GoalList } from "./domain/goalList/GoalList";
 import "./App.css";
+import GlobalLoader from "./components/GlobalLoader";
 
 const theme = createTheme({
   palette: {
@@ -40,6 +41,7 @@ function App() {
         </header>
         <main>
           <GoalList />
+              <GlobalLoader />
         </main>
       </div>
     </ThemeProvider>
