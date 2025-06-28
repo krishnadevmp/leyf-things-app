@@ -1,5 +1,5 @@
 import { ThemeProvider, createTheme, CssBaseline } from "@mui/material";
-import { GoalList } from "./components/GoalList";
+import { GoalList } from "./domain/GoalList";
 import "./App.css";
 
 const theme = createTheme({
