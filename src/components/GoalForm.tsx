@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { TextFieldElement } from "react-hook-form-mui";
-import type { GoalDTO } from "../services/goalService";
+import { useCreateGoal, type GoalDTO } from "../services/goalService";
 
 interface GoalFormProps {
   goal?: GoalDTO;
@@ -19,7 +19,7 @@ interface GoalFormProps {
 }
 
 export const GoalForm = ({ goal, onClose, open }: GoalFormProps) => {
-  const addGoal = useGoalStore((state) => state.addGoal);
+  const addGoal = useCreateGoal();
   const updateGoal = useGoalStore((state) => state.updateGoal);
 
   const { control, handleSubmit, reset } = useForm<GoalDTO>({
@@ -49,7 +49,7 @@ export const GoalForm = ({ goal, onClose, open }: GoalFormProps) => {
     if (goal) {
       updateGoal({ ...goal, ...goalData });
     } else {
-      addGoal(goalData);
+      addGoal.mutateAsync({ ...goalData, priority: "Medium" });
     }
 
     reset();
