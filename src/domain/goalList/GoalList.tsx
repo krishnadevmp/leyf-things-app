@@ -1,7 +1,4 @@
-import { useState, type MouseEvent } from "react";
-import type { GoalFilters } from "../types/goal";
-import { useGoalStore } from "../store/useGoalStore";
-import { GoalForm } from "./GoalForm";
+import { GoalForm } from "../goalForm/GoalForm";
 import {
   Container,
   Typography,
@@ -20,7 +17,6 @@ import {
   Grid,
   ToggleButtonGroup,
   ToggleButton,
-  type SelectChangeEvent,
 } from "@mui/material";
 import {
   CheckCircle as CheckCircleIcon,
@@ -29,75 +25,24 @@ import {
   Delete as DeleteIcon,
   Sort as SortIcon,
 } from "@mui/icons-material";
-import {
-  useGetGoals,
-  useUpdateGoalStatus,
-  type GoalDTO,
-} from "../services/goalService";
+import useGoalListController from "./useGoalListController";
 
 export const GoalList = () => {
-  // const goals = useGoalStore((state) => state.goals);
-  const { data: goals } = useGetGoals();
-  // const goals = goalsResponse as Goal[];
-  const filters = useGoalStore((state) => state.filters);
-  // const toggleGoal = useGoalStore((state) => state.toggleGoal);
-  const toggleGoal = useUpdateGoalStatus();
-  const deleteGoal = useGoalStore((state) => state.deleteGoal);
-  const setFilters = useGoalStore((state) => state.setFilters);
-
-  const [editingGoal, setEditingGoal] = useState<GoalDTO | null>(null);
-  const [showForm, setShowForm] = useState(false);
-
-  const handleToggleComplete = (goalId: string, status: string) => {
-    toggleGoal.mutateAsync({ id: goalId, status: status });
-  };
-
-  const handleDelete = (goalId: string) => {
-    if (window.confirm("Are you sure you want to delete this goal?")) {
-      deleteGoal(goalId);
-    }
-  };
-
-  const handleFilterChange = (
-    event: SelectChangeEvent<GoalFilters["status"]>
-  ) => {
-    setFilters({ status: event.target.value as GoalFilters["status"] });
-  };
-
-  const handleSortChange = (
-    _: MouseEvent<HTMLElement>,
-    value: GoalFilters["sortBy"] | null
-  ) => {
-    if (value) {
-      setFilters({
-        sortBy: value,
-        sortOrder: filters.sortOrder === "asc" ? "desc" : "asc",
-      });
-    }
-  };
-
-  const filteredGoals =
-    goals?.filter((goal: GoalDTO) => {
-      if (filters.status === "completed") return goal.status === "completed";
-      if (filters.status === "incomplete") return goal.status !== "completed";
-      return true;
-    }) ?? [];
-
-  const sortedGoals = [...filteredGoals].sort((a: GoalDTO, b: GoalDTO) => {
-    const dateA = a[filters.sortBy]
-      ? new Date(a[filters.sortBy]!)
-      : new Date(0);
-    const dateB = b[filters.sortBy]
-      ? new Date(b[filters.sortBy]!)
-      : new Date(0);
-    return filters.sortOrder === "asc"
-      ? dateA.getTime() - dateB.getTime()
-      : dateB.getTime() - dateA.getTime();
-  });
-
-  const completedCount =
-    goals?.filter((g: GoalDTO) => g.status === "completed")?.length ?? 0;
-  const progress = (completedCount / (goals?.length ?? 0)) * 100 || 0;
+  const {
+    filters,
+    editingGoal,
+    setEditingGoal,
+    showForm,
+    setShowForm,
+    handleToggleComplete,
+    handleDelete,
+    handleFilterChange,
+    handleSortChange,
+    sortedGoals,
+    completedCount,
+    progress,
+    goals,
+  } = useGoalListController();
 
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>

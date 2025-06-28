@@ -1,5 +1,3 @@
-import { useEffect } from "react";
-import { useGoalStore } from "../store/useGoalStore";
 import {
   Dialog,
   DialogTitle,
@@ -8,13 +6,9 @@ import {
   Button,
   Stack,
 } from "@mui/material";
-import { useForm } from "react-hook-form";
 import { TextFieldElement } from "react-hook-form-mui";
-import {
-  useCreateGoal,
-  useUpdateGoal,
-  type GoalDTO,
-} from "../services/goalService";
+import { type GoalDTO } from "../../services/goalService";
+import useGoalFormController from "./useGoalFormController";
 
 interface GoalFormProps {
   goal?: GoalDTO;
@@ -23,46 +17,11 @@ interface GoalFormProps {
 }
 
 export const GoalForm = ({ goal, onClose, open }: GoalFormProps) => {
-  const addGoal = useCreateGoal();
-  const updateGoal = useUpdateGoal();
-
-  const { control, handleSubmit, reset } = useForm<GoalDTO>({
-    defaultValues: {
-      title: goal?.title || "",
-      description: goal?.description || "",
-      targetDate: "",
-    },
-  });
-
-  useEffect(() => {
-    reset({
-      title: goal?.title || "",
-      description: goal?.description || "",
-      targetDate: goal?.targetDate,
-    });
-  }, [goal, open, reset]);
-
-  const onSubmit = (data: GoalDTO) => {
-    const goalData: GoalDTO = {
-      title: data.title,
-      description: data.description,
-      targetDate: data.targetDate,
-      status: "inComplete",
-    };
-
-    if (goal) {
-      updateGoal.mutateAsync({ ...goal, ...goalData });
-    } else {
-      addGoal.mutateAsync({ ...goalData, priority: "Medium" });
-    }
-
-    reset();
-    onClose?.();
-  };
+  const { control, handleSubmit } = useGoalFormController(goal, onClose);
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit}>
         <DialogTitle>{goal ? "Edit Goal" : "Create New Goal"}</DialogTitle>
         <DialogContent>
           <Stack spacing={3} sx={{ mt: 1 }}>
