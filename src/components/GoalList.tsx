@@ -29,22 +29,27 @@ import {
   Delete as DeleteIcon,
   Sort as SortIcon,
 } from "@mui/icons-material";
-import { useGetGoals, type GoalDTO } from "../services/goalService";
+import {
+  useGetGoals,
+  useUpdateGoalStatus,
+  type GoalDTO,
+} from "../services/goalService";
 
 export const GoalList = () => {
   // const goals = useGoalStore((state) => state.goals);
   const { data: goals } = useGetGoals();
   // const goals = goalsResponse as Goal[];
   const filters = useGoalStore((state) => state.filters);
-  const toggleGoal = useGoalStore((state) => state.toggleGoal);
+  // const toggleGoal = useGoalStore((state) => state.toggleGoal);
+  const toggleGoal = useUpdateGoalStatus();
   const deleteGoal = useGoalStore((state) => state.deleteGoal);
   const setFilters = useGoalStore((state) => state.setFilters);
 
   const [editingGoal, setEditingGoal] = useState<GoalDTO | null>(null);
   const [showForm, setShowForm] = useState(false);
 
-  const handleToggleComplete = (goalId: string) => {
-    toggleGoal(goalId);
+  const handleToggleComplete = (goalId: string, status: string) => {
+    toggleGoal.mutateAsync({ id: goalId, status: status });
   };
 
   const handleDelete = (goalId: string) => {
@@ -188,7 +193,14 @@ export const GoalList = () => {
                     <Typography variant="h6">{goal.title}</Typography>
                     <Box>
                       <IconButton
-                        onClick={() => handleToggleComplete(goal.id!)}
+                        onClick={() =>
+                          handleToggleComplete(
+                            goal.id!,
+                            goal.status === "completed"
+                              ? "inComplete"
+                              : "completed"
+                          )
+                        }
                         color={
                           goal.status === "completed" ? "success" : "default"
                         }
@@ -244,11 +256,13 @@ export const GoalList = () => {
 
       <GoalForm open={showForm} onClose={() => setShowForm(false)} />
 
-      <GoalForm
-        open={!!editingGoal}
-        goal={editingGoal || undefined}
-        onClose={() => setEditingGoal(null)}
-      />
+      {editingGoal ? (
+        <GoalForm
+          open={!!editingGoal}
+          goal={editingGoal || undefined}
+          onClose={() => setEditingGoal(null)}
+        />
+      ) : null}
     </Container>
   );
 };

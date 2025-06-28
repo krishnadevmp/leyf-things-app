@@ -55,14 +55,28 @@ export const useCreateGoal = () => {
   });
 };
 
-export const useUpdateGoal = (id: string) => {
+export const useUpdateGoal = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (goal: GoalDTO) => {
-      const res = await axios.put(`${API_BASE}/${id}`, goal);
+      const res = await axios.put(`${API_BASE}/${goal.id}`, goal);
       return res.data;
     },
-    onSuccess: () => {
+    onSuccess: (_, { id }) => {
+      queryClient.invalidateQueries({ queryKey: ["goals"] });
+      queryClient.invalidateQueries({ queryKey: ["goals", id] });
+    },
+  });
+};
+
+export const useUpdateGoalStatus = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ id, status }: { id: string; status: string }) => {
+      await axios.patch(`${API_BASE}/${id}/status`, { status });
+    },
+    onSuccess: (_, { id }) => {
       queryClient.invalidateQueries({ queryKey: ["goals"] });
       queryClient.invalidateQueries({ queryKey: ["goals", id] });
     },
