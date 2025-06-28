@@ -1,5 +1,5 @@
 import { useState, type MouseEvent } from "react";
-import type { Goal, GoalFilters } from "../types/goal";
+import type { GoalFilters } from "../types/goal";
 import { useGoalStore } from "../store/useGoalStore";
 import { GoalForm } from "./GoalForm";
 import {
@@ -29,22 +29,25 @@ import {
   Delete as DeleteIcon,
   Sort as SortIcon,
 } from "@mui/icons-material";
+import { useGetGoals, type GoalDTO } from "../services/goalService";
 
 export const GoalList = () => {
-  const goals = useGoalStore((state) => state.goals);
+  // const goals = useGoalStore((state) => state.goals);
+  const { data: goals } = useGetGoals();
+  // const goals = goalsResponse as Goal[];
   const filters = useGoalStore((state) => state.filters);
   const toggleGoal = useGoalStore((state) => state.toggleGoal);
   const deleteGoal = useGoalStore((state) => state.deleteGoal);
   const setFilters = useGoalStore((state) => state.setFilters);
 
-  const [editingGoal, setEditingGoal] = useState<Goal | null>(null);
+  const [editingGoal, setEditingGoal] = useState<GoalDTO | null>(null);
   const [showForm, setShowForm] = useState(false);
 
-  const handleToggleComplete = (goalId: number) => {
+  const handleToggleComplete = (goalId: string) => {
     toggleGoal(goalId);
   };
 
-  const handleDelete = (goalId: number) => {
+  const handleDelete = (goalId: string) => {
     if (window.confirm("Are you sure you want to delete this goal?")) {
       deleteGoal(goalId);
     }
@@ -68,22 +71,28 @@ export const GoalList = () => {
     }
   };
 
-  const filteredGoals = goals.filter((goal: Goal) => {
-    if (filters.status === "completed") return goal.isCompleted;
-    if (filters.status === "incomplete") return !goal.isCompleted;
-    return true;
-  });
+  const filteredGoals =
+    goals?.filter((goal: GoalDTO) => {
+      if (filters.status === "completed") return goal.status === "completed";
+      if (filters.status === "incomplete") return goal.status !== "completed";
+      return true;
+    }) ?? [];
 
-  const sortedGoals = [...filteredGoals].sort((a: Goal, b: Goal) => {
-    const dateA = a[filters.sortBy] || new Date(0);
-    const dateB = b[filters.sortBy] || new Date(0);
+  const sortedGoals = [...filteredGoals].sort((a: GoalDTO, b: GoalDTO) => {
+    const dateA = a[filters.sortBy]
+      ? new Date(a[filters.sortBy]!)
+      : new Date(0);
+    const dateB = b[filters.sortBy]
+      ? new Date(b[filters.sortBy]!)
+      : new Date(0);
     return filters.sortOrder === "asc"
       ? dateA.getTime() - dateB.getTime()
       : dateB.getTime() - dateA.getTime();
   });
 
-  const completedCount = goals.filter((g: Goal) => g.isCompleted).length;
-  const progress = (completedCount / goals.length) * 100 || 0;
+  const completedCount =
+    goals?.filter((g: GoalDTO) => g.status === "completed")?.length ?? 0;
+  const progress = (completedCount / (goals?.length ?? 0)) * 100 || 0;
 
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
@@ -111,7 +120,7 @@ export const GoalList = () => {
                 sx={{ height: 10, borderRadius: 5 }}
               />
               <Typography variant="body2" color="text.secondary">
-                {completedCount} of {goals.length} goals completed (
+                {completedCount} of {goals?.length ?? 0} goals completed (
                 {Math.round(progress)}%)
               </Typography>
             </Stack>
@@ -146,12 +155,12 @@ export const GoalList = () => {
                   {filters.sortBy === "targetDate" &&
                     (filters.sortOrder === "asc" ? "↑" : "↓")}
                 </ToggleButton>
-                <ToggleButton value="createdAt">
+                {/* <ToggleButton value="createdAt">
                   <SortIcon />
                   Created Date{" "}
                   {filters.sortBy === "createdAt" &&
                     (filters.sortOrder === "asc" ? "↑" : "↓")}
-                </ToggleButton>
+                </ToggleButton> */}
               </ToggleButtonGroup>
             </Grid>
           </Grid>
@@ -162,8 +171,11 @@ export const GoalList = () => {
             <Card
               key={goal.id}
               sx={{
-                opacity: goal.isCompleted ? 0.8 : 1,
-                bgcolor: goal.isCompleted ? "action.hover" : "background.paper",
+                opacity: goal.status === "completed" ? 0.8 : 1,
+                bgcolor:
+                  goal.status === "completed"
+                    ? "action.hover"
+                    : "background.paper",
               }}
             >
               <CardContent>
@@ -177,9 +189,11 @@ export const GoalList = () => {
                     <Box>
                       <IconButton
                         onClick={() => handleToggleComplete(goal.id!)}
-                        color={goal.isCompleted ? "success" : "default"}
+                        color={
+                          goal.status === "completed" ? "success" : "default"
+                        }
                       >
-                        {goal.isCompleted ? (
+                        {goal.status === "completed" ? (
                           <CheckCircleIcon />
                         ) : (
                           <RadioButtonUncheckedIcon />
@@ -208,7 +222,7 @@ export const GoalList = () => {
                         Target Date:{" "}
                         {new Date(goal.targetDate).toLocaleDateString()}
                       </Typography>
-                      {goal.targetDate > new Date() && (
+                      {new Date(goal.targetDate) > new Date() && (
                         <Chip
                           label={`${Math.ceil(
                             (new Date(goal.targetDate).getTime() -

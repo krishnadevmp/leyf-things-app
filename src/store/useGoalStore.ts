@@ -1,12 +1,13 @@
 import { create } from "zustand";
-import type { Goal, GoalFilters } from "../types/goal";
+import type { GoalFilters } from "../types/goal";
+import type { GoalDTO } from "../services/goalService";
 interface GoalState {
-  goals: Goal[];
+  goals: GoalDTO[];
   filters: GoalFilters;
-  addGoal: (goal: Goal) => void;
-  updateGoal: (goal: Goal) => void;
-  deleteGoal: (id: number) => void;
-  toggleGoal: (id: number) => void;
+  addGoal: (goal: GoalDTO) => void;
+  updateGoal: (goal: GoalDTO) => void;
+  deleteGoal: (id: string) => void;
+  toggleGoal: (id: string) => void;
   setFilters: (filters: Partial<GoalFilters>) => void;
 }
 
@@ -20,38 +21,39 @@ export const useGoalStore = create<GoalState>()((set) => ({
   goals: [],
   filters: initialFilters,
 
-  addGoal: (goalInput: Goal) =>
+  addGoal: (goalInput: GoalDTO) =>
     set((state) => ({
       goals: [
         ...state.goals,
         {
           ...goalInput,
-          id:
-            state.goals.length > 0
-              ? Math.max(...state.goals.map<number>((goal) => goal.id!)) + 1
-              : 0,
           createdAt: new Date(),
           isCompleted: false,
         },
       ],
     })),
 
-  updateGoal: (updatedGoal: Goal) =>
+  updateGoal: (updatedGoal: GoalDTO) =>
     set((state) => ({
-      goals: state.goals.map((goal: Goal) =>
+      goals: state.goals.map((goal: GoalDTO) =>
         goal.id === updatedGoal.id ? updatedGoal : goal
       ),
     })),
 
-  deleteGoal: (id: number) =>
+  deleteGoal: (id: string) =>
     set((state) => ({
-      goals: state.goals.filter((goal: Goal) => goal.id !== id),
+      goals: state.goals.filter((goal: GoalDTO) => goal.id !== id),
     })),
 
-  toggleGoal: (id: number) =>
+  toggleGoal: (id: string) =>
     set((state) => ({
-      goals: state.goals.map((goal: Goal) =>
-        goal.id === id ? { ...goal, isCompleted: !goal.isCompleted } : goal
+      goals: state.goals.map<GoalDTO>((goal: GoalDTO) =>
+        goal.id === id
+          ? {
+              ...goal,
+              status: goal.status === "completed" ? "inComplete" : "completed",
+            }
+          : goal
       ),
     })),
 

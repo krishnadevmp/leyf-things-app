@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import type { Goal } from "../types/goal";
 import { useGoalStore } from "../store/useGoalStore";
 import {
   Dialog,
@@ -11,9 +10,10 @@ import {
 } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { TextFieldElement } from "react-hook-form-mui";
+import type { GoalDTO } from "../services/goalService";
 
 interface GoalFormProps {
-  goal?: Goal;
+  goal?: GoalDTO;
   onClose?: () => void;
   open: boolean;
 }
@@ -22,11 +22,11 @@ export const GoalForm = ({ goal, onClose, open }: GoalFormProps) => {
   const addGoal = useGoalStore((state) => state.addGoal);
   const updateGoal = useGoalStore((state) => state.updateGoal);
 
-  const { control, handleSubmit, reset } = useForm<Goal>({
+  const { control, handleSubmit, reset } = useForm<GoalDTO>({
     defaultValues: {
       title: goal?.title || "",
       description: goal?.description || "",
-      targetDate: goal?.targetDate ? new Date(goal.targetDate) : undefined,
+      targetDate: "",
     },
   });
 
@@ -34,16 +34,16 @@ export const GoalForm = ({ goal, onClose, open }: GoalFormProps) => {
     reset({
       title: goal?.title || "",
       description: goal?.description || "",
-      targetDate: goal?.targetDate ? new Date(goal.targetDate) : undefined,
+      targetDate: goal?.targetDate,
     });
   }, [goal, open, reset]);
 
-  const onSubmit = (data: Goal) => {
-    const goalData: Goal = {
+  const onSubmit = (data: GoalDTO) => {
+    const goalData: GoalDTO = {
       title: data.title,
       description: data.description,
-      targetDate: data.targetDate ? new Date(data.targetDate) : undefined,
-      isCompleted: false,
+      targetDate: data.targetDate,
+      status: "inComplete",
     };
 
     if (goal) {

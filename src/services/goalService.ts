@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
+import config from "../config";
 
 export interface MileStoneDTO {
   title?: string;
@@ -8,6 +9,7 @@ export interface MileStoneDTO {
 }
 
 export interface GoalDTO {
+  id?: string;
   title?: string;
   description?: string;
   category?: string;
@@ -17,7 +19,7 @@ export interface GoalDTO {
   mileStones?: MileStoneDTO[];
 }
 
-const API_BASE = "/api/Goals";
+const API_BASE = `${config.apiBaseUrl}/api/Goals`;
 
 export const useGetGoals = () => {
   return useQuery<GoalDTO[]>({
