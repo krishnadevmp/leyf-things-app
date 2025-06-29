@@ -5,27 +5,20 @@ import {
   Button,
   Card,
   CardContent,
-  IconButton,
   Stack,
   Select,
   MenuItem,
   FormControl,
   InputLabel,
   Box,
-  Chip,
   LinearProgress,
   Grid,
   ToggleButtonGroup,
   ToggleButton,
 } from "@mui/material";
-import {
-  CheckCircle as CheckCircleIcon,
-  RadioButtonUnchecked as RadioButtonUncheckedIcon,
-  Edit as EditIcon,
-  Delete as DeleteIcon,
-  Sort as SortIcon,
-} from "@mui/icons-material";
+import { Sort as SortIcon } from "@mui/icons-material";
 import useGoalListController from "./useGoalListController";
+import { GoalCard } from "./GoalCard";
 
 export const GoalList = () => {
   const {
@@ -112,83 +105,13 @@ export const GoalList = () => {
 
         <Stack spacing={2}>
           {sortedGoals.map((goal) => (
-            <Card
+            <GoalCard
               key={goal.id}
-              sx={{
-                opacity: goal.status === "completed" ? 0.8 : 1,
-                bgcolor:
-                  goal.status === "completed"
-                    ? "action.hover"
-                    : "background.paper",
-              }}
-            >
-              <CardContent>
-                <Stack spacing={2}>
-                  <Box
-                    display="flex"
-                    justifyContent="space-between"
-                    alignItems="center"
-                  >
-                    <Typography variant="h6">{goal.title}</Typography>
-                    <Box>
-                      <IconButton
-                        onClick={() =>
-                          handleToggleComplete(
-                            goal.id!,
-                            goal.status === "completed"
-                              ? "inComplete"
-                              : "completed"
-                          )
-                        }
-                        color={
-                          goal.status === "completed" ? "success" : "default"
-                        }
-                      >
-                        {goal.status === "completed" ? (
-                          <CheckCircleIcon />
-                        ) : (
-                          <RadioButtonUncheckedIcon />
-                        )}
-                      </IconButton>
-                      <IconButton
-                        onClick={() => setEditingGoal(goal)}
-                        color="primary"
-                      >
-                        <EditIcon />
-                      </IconButton>
-                      <IconButton
-                        onClick={() => handleDelete(goal.id!)}
-                        color="error"
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </Box>
-                  </Box>
-                  <Typography color="text.secondary">
-                    {goal.description}
-                  </Typography>
-                  {goal.targetDate && (
-                    <Box display="flex" gap={1} alignItems="center">
-                      <Typography variant="body2" color="text.secondary">
-                        Target Date:{" "}
-                        {new Date(goal.targetDate).toLocaleDateString()}
-                      </Typography>
-                      {new Date(goal.targetDate) > new Date() && (
-                        <Chip
-                          label={`${Math.ceil(
-                            (new Date(goal.targetDate).getTime() -
-                              new Date().getTime()) /
-                              (1000 * 60 * 60 * 24)
-                          )} days left`}
-                          color="primary"
-                          size="small"
-                        />
-                      )}
-                    </Box>
-                  )}
-                </Stack>
-              </CardContent>
-            </Card>
+              goal={goal}
+              onToggleComplete={handleToggleComplete}
+              onEdit={setEditingGoal}
+              onDelete={handleDelete}
+            />
           ))}
         </Stack>
       </Stack>
