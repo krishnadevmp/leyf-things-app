@@ -6,9 +6,10 @@ import {
   Button,
   Stack,
 } from "@mui/material";
-import { TextFieldElement } from "react-hook-form-mui";
+import { TextFieldElement, useFieldArray, useWatch } from "react-hook-form-mui";
 import { type GoalDTO } from "../../services/goalService";
 import useGoalFormController from "./useGoalFormController";
+import MileStoneForm from "../milstone/MileStoneForm";
 
 interface GoalFormProps {
   goal?: GoalDTO;
@@ -18,6 +19,10 @@ interface GoalFormProps {
 
 export const GoalForm = ({ goal, onClose, open }: GoalFormProps) => {
   const { control, handleSubmit } = useGoalFormController(goal, onClose);
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "mileStones",
+  });
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
@@ -55,6 +60,12 @@ export const GoalForm = ({ goal, onClose, open }: GoalFormProps) => {
               InputLabelProps={{
                 shrink: true,
               }}
+            />
+            <MileStoneForm
+              fields={fields}
+              append={append}
+              remove={remove}
+              control={control}
             />
           </Stack>
         </DialogContent>

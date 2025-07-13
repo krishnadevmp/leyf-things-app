@@ -1,12 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import config from "../config";
-
-export interface MileStoneDTO {
-  title?: string;
-  isComplete: boolean;
-  dueDate?: string;
-}
+import type { MileStoneDTO } from "./mileStoneService";
 
 export interface GoalDTO {
   id?: string;

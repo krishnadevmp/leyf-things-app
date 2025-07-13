@@ -15,6 +15,7 @@ import {
   Grid,
   ToggleButtonGroup,
   ToggleButton,
+  Divider,
 } from "@mui/material";
 import { Sort as SortIcon } from "@mui/icons-material";
 import useGoalListController from "./useGoalListController";
@@ -41,7 +42,7 @@ export const GoalList = () => {
     <Container maxWidth="lg" sx={{ py: 4 }}>
       <Stack spacing={4}>
         <Box display="flex" justifyContent="space-between" alignItems="center">
-          <Typography variant="h4" component="h1" gutterBottom>
+          <Typography variant="h4" fontWeight={600}>
             My Goals
           </Typography>
           <Button
@@ -49,14 +50,16 @@ export const GoalList = () => {
             color="primary"
             onClick={() => setShowForm(true)}
           >
-            Add New Goal
+            + Add New Goal
           </Button>
         </Box>
 
         <Card>
           <CardContent>
             <Stack spacing={2}>
-              <Typography variant="h6">Progress</Typography>
+              <Typography variant="subtitle1" fontWeight={500}>
+                Progress Overview
+              </Typography>
               <LinearProgress
                 variant="determinate"
                 value={progress}
@@ -70,38 +73,50 @@ export const GoalList = () => {
           </CardContent>
         </Card>
 
-        <Box>
-          <Grid container spacing={2} alignItems="center">
-            <Grid item xs={12} sm={6} md={4}>
-              <FormControl fullWidth>
-                <InputLabel>Filter by Status</InputLabel>
-                <Select
-                  value={filters.status}
-                  label="Filter by Status"
-                  onChange={handleFilterChange}
+        <Card>
+          <CardContent>
+            <Grid container spacing={3} alignItems="center">
+              <Grid item xs={12} sm={6} md={4}>
+                <FormControl fullWidth>
+                  <InputLabel id="status-label">Status Filter</InputLabel>
+                  <Select
+                    labelId="status-label"
+                    value={filters.status}
+                    label="Status Filter"
+                    onChange={handleFilterChange}
+                  >
+                    <MenuItem value="all">All</MenuItem>
+                    <MenuItem value="completed">Completed</MenuItem>
+                    <MenuItem value="incomplete">Incomplete</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={6} md={8}>
+                <Typography
+                  variant="subtitle2"
+                  color="text.secondary"
+                  gutterBottom
                 >
-                  <MenuItem value="all">All</MenuItem>
-                  <MenuItem value="completed">Completed</MenuItem>
-                  <MenuItem value="incomplete">Incomplete</MenuItem>
-                </Select>
-              </FormControl>
+                  Sort Goals By
+                </Typography>
+                <ToggleButtonGroup
+                  exclusive
+                  value={filters.sortBy}
+                  onChange={handleSortChange}
+                  size="small"
+                  color="primary"
+                >
+                  <ToggleButton value="targetDate">
+                    <SortIcon fontSize="small" sx={{ mr: 1 }} />
+                    Target Date{" "}
+                    {filters.sortBy === "targetDate" &&
+                      (filters.sortOrder === "asc" ? "↑" : "↓")}
+                  </ToggleButton>
+                </ToggleButtonGroup>
+              </Grid>
             </Grid>
-            <Grid item xs={12} sm={6} md={8}>
-              <ToggleButtonGroup
-                exclusive
-                value={filters.sortBy}
-                onChange={handleSortChange}
-              >
-                <ToggleButton value="targetDate">
-                  <SortIcon />
-                  Target Date{" "}
-                  {filters.sortBy === "targetDate" &&
-                    (filters.sortOrder === "asc" ? "↑" : "↓")}
-                </ToggleButton>
-              </ToggleButtonGroup>
-            </Grid>
-          </Grid>
-        </Box>
+          </CardContent>
+        </Card>
 
         <Stack spacing={2}>
           {sortedGoals.map((goal) => (

@@ -27,9 +27,7 @@ const useGoalFormController = (goal?: GoalDTO, onClose?: () => void) => {
 
   const onSubmit = (data: GoalDTO) => {
     const goalData: GoalDTO = {
-      title: data.title,
-      description: data.description,
-      targetDate: data.targetDate,
+      ...data,
       status: "inComplete",
     };
 
