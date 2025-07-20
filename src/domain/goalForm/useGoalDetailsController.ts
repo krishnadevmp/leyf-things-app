@@ -26,7 +26,7 @@ const useGoalDetailsController = (goalId?: string) => {
     name: "mileStones",
   });
 
-  const { data: goal } = useGetGoalById(goalId || "");
+  const { data: goal } = useGetGoalById(goalId);
   const { mutateAsync: createGoal } = useCreateGoal();
   const { mutateAsync: updateGoal } = useUpdateGoal();
 
@@ -40,7 +40,7 @@ const useGoalDetailsController = (goalId?: string) => {
     if (goalId) {
       await updateGoal({ ...data, id: goalId });
     } else {
-      await createGoal(data);
+      await createGoal({ ...data, status: "incomplete", priority: "medium" });
     }
     navigate("/goal-tracker");
   };

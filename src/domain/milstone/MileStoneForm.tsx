@@ -47,7 +47,7 @@ const MileStoneForm = ({
       ))}
       <Button
         variant="outlined"
-        onClick={() => append({ title: "", dueDate: "", status: "inComplete" })}
+        onClick={() => append({ title: "", dueDate: "", status: "incomplete" })}
       >
         Add Milestone
       </Button>

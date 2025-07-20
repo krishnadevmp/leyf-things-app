@@ -1,26 +1,28 @@
 import {
-  Card,
-  CardContent,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
   Typography,
-  IconButton,
-  Box,
-  Stack,
   Chip,
   LinearProgress,
+  Box,
+  IconButton,
+  Stack,
 } from "@mui/material";
 import {
   CheckCircle as CheckCircleIcon,
   RadioButtonUnchecked as RadioButtonUncheckedIcon,
   Edit as EditIcon,
   Delete as DeleteIcon,
+  ExpandMore as ExpandMoreIcon,
 } from "@mui/icons-material";
 import type { GoalDTO } from "../../services/goalService";
 import MilestoneCard from "../milstone/MileStoneCard";
+import { useNavigate } from "react-router-dom";
 
 interface GoalCardProps {
   goal: GoalDTO;
   onToggleComplete: (id: string, status: string) => void;
-  onEdit: (goal: GoalDTO) => void;
   onDelete: (id: string) => void;
 }
 
@@ -38,22 +40,23 @@ const getStatusColor = (status: string) => {
 export const GoalCard = ({
   goal,
   onToggleComplete,
-  onEdit,
   onDelete,
 }: GoalCardProps) => {
   const completed =
     goal.mileStones?.filter((m) => m.status === "completed").length || 0;
   const total = goal.mileStones?.length || 1;
   const progress = (completed / total) * 100;
+  const navigate = useNavigate();
 
   return (
-    <Card variant="outlined" sx={{ mb: 2 }}>
-      <CardContent>
+    <Accordion>
+      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
         <Stack
           direction="row"
-          justifyContent="space-between"
           alignItems="flex-start"
+          justifyContent="space-between"
           spacing={2}
+          sx={{ width: "100%" }}
         >
           <Stack
             direction="row"
@@ -62,12 +65,13 @@ export const GoalCard = ({
             flexGrow={1}
           >
             <IconButton
-              onClick={() =>
+              onClick={(e) => {
+                e.stopPropagation();
                 onToggleComplete(
                   goal.id!,
                   goal.status === "completed" ? "incomplete" : "completed"
-                )
-              }
+                );
+              }}
               color={goal.status === "completed" ? "success" : "default"}
             >
               {goal.status === "completed" ? (
@@ -79,16 +83,20 @@ export const GoalCard = ({
 
             <Box sx={{ textAlign: "left" }}>
               <Stack direction="row" alignItems="center" spacing={1}>
-                <Typography variant="h6">{goal.title}</Typography>
+                <Typography variant="h6" align="left">
+                  {goal.title}
+                </Typography>
                 <Chip
                   label={goal.status}
                   size="small"
                   color={getStatusColor(goal.status ?? "")}
                 />
               </Stack>
-              <Typography color="text.secondary">{goal.description}</Typography>
+              <Typography color="text.secondary" align="left">
+                {goal.description}
+              </Typography>
               {goal.targetDate && (
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" color="text.secondary" align="left">
                   Target Date: {new Date(goal.targetDate).toLocaleDateString()}
                 </Typography>
               )}
@@ -109,27 +117,39 @@ export const GoalCard = ({
                 },
               }}
             />
-            <IconButton onClick={() => onEdit(goal)} color="primary">
+            <IconButton
+              onClick={(e) => {
+                e.stopPropagation();
+                navigate(`${goal.id}/edit`);
+              }}
+              color="primary"
+            >
               <EditIcon />
             </IconButton>
-            <IconButton onClick={() => onDelete(goal.id!)} color="error">
+            <IconButton
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete(goal.id!);
+              }}
+              color="error"
+            >
               <DeleteIcon />
             </IconButton>
           </Stack>
         </Stack>
+      </AccordionSummary>
 
-        <Box mt={2}>
-          {goal.mileStones?.map((milestone) => (
-            <MilestoneCard
-              key={milestone.id}
-              title={milestone.title}
-              id={milestone.id!}
-              status={milestone.status}
-              dueDate={milestone.dueDate}
-            />
-          ))}
-        </Box>
-      </CardContent>
-    </Card>
+      <AccordionDetails>
+        {goal.mileStones?.map((milestone) => (
+          <MilestoneCard
+            key={milestone.id}
+            title={milestone.title}
+            id={milestone.id!}
+            status={milestone.status}
+            dueDate={milestone.dueDate}
+          />
+        ))}
+      </AccordionDetails>
+    </Accordion>
   );
 };

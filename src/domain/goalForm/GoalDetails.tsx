@@ -5,7 +5,7 @@ import useGoalDetailsController from "./useGoalDetailsController";
 import MileStoneForm from "../milstone/MileStoneForm";
 
 const GoalDetails = () => {
-  const { goalId } = useParams();
+  const { id: goalId } = useParams();
   const navigate = useNavigate();
   const { methods, fields, append, remove, onSubmit } =
     useGoalDetailsController(goalId);
