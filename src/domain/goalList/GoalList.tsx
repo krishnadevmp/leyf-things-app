@@ -1,4 +1,3 @@
-import { GoalForm } from "../goalForm/GoalForm";
 import {
   Container,
   Typography,
@@ -15,19 +14,15 @@ import {
   Grid,
   ToggleButtonGroup,
   ToggleButton,
-  Divider,
 } from "@mui/material";
 import { Sort as SortIcon } from "@mui/icons-material";
 import useGoalListController from "./useGoalListController";
 import { GoalCard } from "./GoalCard";
+import { useNavigate } from "react-router-dom";
 
 export const GoalList = () => {
   const {
     filters,
-    editingGoal,
-    setEditingGoal,
-    showForm,
-    setShowForm,
     handleToggleComplete,
     handleDelete,
     handleFilterChange,
@@ -37,6 +32,7 @@ export const GoalList = () => {
     progress,
     goals,
   } = useGoalListController();
+  const navigate = useNavigate();
 
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
@@ -48,7 +44,7 @@ export const GoalList = () => {
           <Button
             variant="contained"
             color="primary"
-            onClick={() => setShowForm(true)}
+            onClick={() => navigate("add")}
           >
             + Add New Goal
           </Button>
@@ -108,7 +104,7 @@ export const GoalList = () => {
                 >
                   <ToggleButton value="targetDate">
                     <SortIcon fontSize="small" sx={{ mr: 1 }} />
-                    Target Date{" "}
+                    Target Date
                     {filters.sortBy === "targetDate" &&
                       (filters.sortOrder === "asc" ? "↑" : "↓")}
                   </ToggleButton>
@@ -124,22 +120,11 @@ export const GoalList = () => {
               key={goal.id}
               goal={goal}
               onToggleComplete={handleToggleComplete}
-              onEdit={setEditingGoal}
               onDelete={handleDelete}
             />
           ))}
         </Stack>
       </Stack>
-
-      <GoalForm open={showForm} onClose={() => setShowForm(false)} />
-
-      {editingGoal ? (
-        <GoalForm
-          open={!!editingGoal}
-          goal={editingGoal || undefined}
-          onClose={() => setEditingGoal(null)}
-        />
-      ) : null}
     </Container>
   );
 };

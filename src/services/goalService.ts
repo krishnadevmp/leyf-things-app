@@ -26,7 +26,7 @@ export const useGetGoals = () => {
   });
 };
 
-export const useGetGoalById = (id: string) => {
+export const useGetGoalById = (id?: string) => {
   return useQuery<GoalDTO>({
     queryKey: ["goals", id],
     queryFn: async () => {

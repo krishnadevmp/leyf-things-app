@@ -1,7 +1,8 @@
 import { ThemeProvider, createTheme, CssBaseline } from "@mui/material";
-import { GoalList } from "./domain/goalList/GoalList";
 import "./App.css";
 import GlobalLoader from "./components/GlobalLoader";
+import router from "./routes";
+import { RouterProvider } from "react-router-dom";
 
 const theme = createTheme({
   palette: {
@@ -36,12 +37,9 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <div className="app">
-        <header className="app-header">
-          <h1>Goal Tracker</h1>
-        </header>
         <main>
-          <GoalList />
-              <GlobalLoader />
+          <RouterProvider router={router} />
+          <GlobalLoader />
         </main>
       </div>
     </ThemeProvider>

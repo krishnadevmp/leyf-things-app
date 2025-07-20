@@ -1,4 +1,4 @@
-import { useState, type MouseEvent } from "react";
+import { type MouseEvent } from "react";
 import type { GoalFilters } from "../../types/goal";
 import { useGoalStore } from "../../store/useGoalStore";
 import {
@@ -13,11 +13,7 @@ const useGoalListController = () => {
   const filters = useGoalStore((state) => state.filters);
   const setFilters = useGoalStore((state) => state.setFilters);
   const toggleGoal = useUpdateGoalStatus();
-  //   const deleteGoal = useGoalStore((state) => state.deleteGoal);
   const deleteGoal = useDeleteGoal();
-
-  const [editingGoal, setEditingGoal] = useState<GoalDTO | null>(null);
-  const [showForm, setShowForm] = useState(false);
 
   const handleToggleComplete = (goalId: string, status: string) => {
     toggleGoal.mutateAsync({ id: goalId, status: status });
@@ -75,10 +71,6 @@ const useGoalListController = () => {
   return {
     filters,
     setFilters,
-    editingGoal,
-    setEditingGoal,
-    showForm,
-    setShowForm,
     handleToggleComplete,
     handleDelete,
     handleFilterChange,
