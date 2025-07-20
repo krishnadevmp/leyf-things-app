@@ -32,15 +32,33 @@ const useGoalDetailsController = (goalId?: string) => {
 
   useEffect(() => {
     if (goal) {
-      reset(goal);
+      reset({
+        ...goal,
+        targetDate: goal?.targetDate
+          ? new Date(goal.targetDate).toISOString().slice(0, 10)
+          : "",
+        mileStones: goal.mileStones?.map((mileStone) => ({
+          ...mileStone,
+          dueDate: mileStone?.dueDate
+            ? new Date(mileStone?.dueDate).toISOString().slice(0, 10)
+            : "",
+        })),
+      });
     }
   }, [goal, reset]);
 
   const onSubmit = async (data: GoalDTO) => {
     if (goalId) {
-      await updateGoal({ ...data, id: goalId });
+      await updateGoal({
+        ...data,
+        id: goalId,
+      });
     } else {
-      await createGoal({ ...data, status: "incomplete", priority: "medium" });
+      await createGoal({
+        ...data,
+        status: "incomplete",
+        priority: "medium",
+      });
     }
     navigate("/goal-tracker");
   };
