@@ -59,7 +59,14 @@ export const GoalList = () => {
               <LinearProgress
                 variant="determinate"
                 value={progress}
-                sx={{ height: 10, borderRadius: 5 }}
+                sx={{
+                  height: 10,
+                  borderRadius: 5,
+                  "& .MuiLinearProgress-bar": {
+                    backgroundColor:
+                      progress === 100 ? "success.main" : "primary.main",
+                  },
+                }}
               />
               <Typography variant="body2" color="text.secondary">
                 {completedCount} of {goals?.length ?? 0} goals completed (
