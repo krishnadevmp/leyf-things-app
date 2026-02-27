@@ -89,3 +89,20 @@ export const useDeleteGoal = () => {
     },
   });
 };
+
+export interface GoalByPromptRequest {
+  prompt: string;
+}
+
+export const useCreateGoalByPrompt = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (data: GoalByPromptRequest) => {
+      const res = await axios.post(`${API_BASE}/chat`, data);
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["goals"] });
+    },
+  });
+};

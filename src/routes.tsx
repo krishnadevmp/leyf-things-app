@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import { GoalList } from "./domain/goalList/GoalList";
 import GoalDetails from "./domain/goalForm/GoalDetails";
+import GoalByPrompt from "./domain/goalByPrompt/GoalByPrompt";
 
 const router = createBrowserRouter([
   {
@@ -13,6 +14,10 @@ const router = createBrowserRouter([
       {
         path: "add",
         element: <GoalDetails />,
+      },
+      {
+        path: "add-with-ai",
+        element: <GoalByPrompt />,
       },
       {
         path: ":id/edit",

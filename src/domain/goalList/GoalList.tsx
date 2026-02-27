@@ -48,6 +48,13 @@ export const GoalList = () => {
           >
             + Add New Goal
           </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => navigate("add-with-ai")}
+          >
+            + Add New Goal with AI
+          </Button>
         </Box>
 
         <Card>
