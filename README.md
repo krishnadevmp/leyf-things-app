@@ -1,54 +1,170 @@
-# React + TypeScript + Vite
+# LeyfThings - Goal Tracker (Frontend)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An AI-powered Goal Tracking Progressive Web Application built with React, TypeScript, and Material UI that helps users transform ideas into structured goals and actionable milestones. The application combines manual goal management with AI-assisted goal generation to create an intuitive and motivating productivity experience.
 
-Currently, two official plugins are available:
+## ✨ Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- 🤖 AI-powered goal and milestone generation from natural language prompts
+- 🎯 Create, update, delete and manage goals
+- ✅ Create and track milestones for every goal
+- 📈 Visual progress tracking based on milestone completion
+- 🔔 Global success/error notifications
+- 📱 Responsive design optimized for desktop and mobile
+- ⚡ Offline-ready architecture
+- 🔄 Automatic data synchronization using React Query
+- 🎨 Modern Material UI interface
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 🛠 Tech Stack
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+### Frontend
+- React 19
+- TypeScript
+- Vite
+- Material UI (MUI)
+- React Router
+- React Query (TanStack Query)
+- React Hook Form
+- Axios
+
+### State Management
+- React Query
+- React Hook Form
+
+### UI
+- Material UI
+- MUI Icons
+
+---
+
+## Project Structure
+
+```
+src
+│
+├── components
+│   ├── goal
+│   ├── milestone
+│   ├── common
+│   └── layout
+│
+├── pages
+│
+├── services
+│
+├── hooks
+│
+├── routes
+│
+├── providers
+│
+└── utils
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Features
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+### Goal Management
+
+- Create goals manually
+- Generate goals using AI
+- Update goals
+- Delete goals
+- Goal status tracking
+- Responsive goal cards
+- Progress visualization
+
+### Milestone Management
+
+- Create milestones
+- Update milestone status
+- Edit milestones
+- Delete milestones
+- Progress calculation
+
+### AI Goal Generation
+
+Describe your objective in natural language.
+
+Example:
+
+> "I want to prepare for a software engineering interview in 3 months while working full-time."
+
+The AI automatically generates:
+
+- Goal
+- Description
+- Milestones
+- Timeline
+
+---
+
+## Installation
+
+```bash
+git clone https://github.com/yourusername/leyfthings-frontend.git
+
+cd leyfthings-frontend
+
+npm install
+
+npm run dev
 ```
+
+---
+
+## Environment Variables
+
+Create a `.env` file.
+
+```env
+VITE_API_BASE_URL=https://localhost:7223
+```
+
+---
+
+## Available Scripts
+
+```bash
+npm run dev
+
+npm run build
+
+npm run preview
+
+npm run lint
+```
+
+---
+
+## Screens
+
+- Dashboard
+- Goal Listing
+- Goal Details
+- AI Goal Creation
+- Manual Goal Creation
+
+---
+
+## Future Enhancements
+
+- Push Notifications
+- AI Chat Assistant
+- Goal Analytics
+- Calendar Integration
+- Recurring Goals
+- Habit Tracking
+- Dark Mode
+- Goal Templates
+- Voice Prompt Support
+
+---
+
+## Backend Repository
+
+This frontend communicates with:
+
+**LeyfThings Backend (.NET Core Web API)**
